@@ -1,0 +1,71 @@
+export const user = {
+  name: 'VAT REVENUE',
+  number: '26373893',
+  bank: 'CBG',
+  branch: 'Adenta',
+}
+
+export const accountArray = [
+  {
+    'POST DATE': '01/01/2015',
+    PARTICULARS: 'OPENING BALANCE',
+    REFERENCE: '',
+    'VALUE DATE': '01/01/2015',
+    'DEBIT AMOUNT': '',
+    'CREDIT AMOUNT': '',
+    BALANCE: '" 15,582,696.19 "',
+    OFFSET: '',
+  },
+
+  {
+    'POST DATE': '05/01/2015',
+    PARTICULARS: 'BAL TRSF TO BOG',
+    REFERENCE: '101000t150020001',
+    'VALUE DATE': '01/01/2015',
+    'DEBIT AMOUNT': '" 15,505,140.91 "',
+    'CREDIT AMOUNT': '',
+    BALANCE: '" 77,555.28 "',
+    OFFSET: '',
+  },
+  {
+    'POST DATE': '03/01/2015',
+    PARTICULARS: 'BAL TO BOG',
+    REFERENCE: '101000t150020001',
+    'VALUE DATE': '01/01/2015',
+    'DEBIT AMOUNT': '" 15,505,140.91 "',
+    'CREDIT AMOUNT': '',
+    BALANCE: '" 77,555.28 "',
+    OFFSET: '',
+  },
+
+  {
+    'POST DATE': '10/03/2015',
+    PARTICULARS: 'TRSF IRO MAKOLA BRANCH',
+    REFERENCE: '124SO11142760005',
+    'VALUE DATE': '01/01/2015',
+    'DEBIT AMOUNT': '" 10,505,140.91 "',
+    'CREDIT AMOUNT': '',
+    BALANCE: '" 83,116.52 "',
+    OFFSET: '',
+  },
+  {
+    'POST DATE': '15/01/2015',
+    PARTICULARS: 'TRF OF VAT COLL.BAL BY TETTEH QUARSHIE',
+    REFERENCE: '126SO11142760013',
+    'VALUE DATE': '01/01/2015',
+    'DEBIT AMOUNT': '" 10,505,140.91 "',
+    'CREDIT AMOUNT': '',
+    BALANCE: '" 1,042,011.15 "',
+    OFFSET: '',
+  },
+  {
+    'POST DATE': '20/01/2015',
+    PARTICULARS: 'SWEEP IN PER GRA TETTEH QUARSHIE CIRCLE',
+    REFERENCE: '126SO11142760004',
+    'VALUE DATE': '01/01/2015',
+    'DEBIT AMOUNT': '" 6,114,187.35 "',
+    'CREDIT AMOUNT': '',
+    BALANCE: '" 7,156,198.50 "',
+    OFFSET: '',
+  },
+]

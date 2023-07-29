@@ -1,0 +1,40 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.1;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0;
+}
+
+a,
+a:visited,
+a:active {
+    text-decoration: none;
+}
+
+.btn-text {
+    font-family: var(--Inknut-Antiqua);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.nav-link-text {
+    color: var(--gray-200);
+    font-family: var(--Inter);
+    cursor: pointer;
+    transition: var(--speed-6);
+    &:hover {
+        color: var(--misty-sky);
+    }
+}
+
+.styled-text {
+    font-family: var(--Inknut-Antiqua);
+}

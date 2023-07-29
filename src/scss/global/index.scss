@@ -1,0 +1,42 @@
+@forward "boilerplate";
+@forward "typography";
+@forward "colors";
+
+// styles.scss
+
+// Define variables for common colors and spacing
+$primaryColor: #007bff;
+$secondaryColor: #6c757d;
+$tableBackground: #f8f9fa;
+$tableHeaderBackground: #f1f1f1;
+$tableCellPadding: 10px;
+
+// Basic table styling
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $tableBackground;
+    margin-bottom: 20px;
+
+    th,
+    td {
+        padding: $tableCellPadding;
+        text-align: left;
+        border-bottom: 1px solid $secondaryColor;
+    }
+
+    th {
+        background-color: $tableHeaderBackground;
+    }
+
+    // Alternate row background colors for better readability
+    tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+
+    // Hover effect for table rows
+    tbody tr:hover {
+        background-color: $primaryColor;
+        color: #ffffff;
+    }
+}

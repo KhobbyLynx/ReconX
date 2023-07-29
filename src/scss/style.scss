@@ -1,0 +1,217 @@
+@forward "global";
+
+.icon {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--primary-bg);
+    width: 100%;
+    padding: 10px;
+
+    .icon {
+        font-size: 32px;
+    }
+
+    span {
+        color: var(--green-600);
+        font-size: 18px;
+    }
+    @media screen and (max-width: "877px") {
+        justify-content: flex-end;
+        padding: 16px;
+        .icon {
+            display: none;
+        }
+    }
+
+    @media screen and (max-width: "566px") {
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    @media screen and (min-width: "566px") {
+        .logo-container {
+            display: none;
+        }
+    }
+}
+
+.main-layout {
+    &__loader {
+        right: 50%;
+        bottom: 50%;
+        @media screen and (max-width: "999px") {
+            right: 40%;
+            bottom: 40%;
+        }
+    }
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bs-6);
+    z-index: 99;
+}
+
+.z-index {
+    z-index: 999;
+}
+
+.request-loader {
+    z-index: 1000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-bottom: 100px;
+}
+
+.error-msg {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--span);
+}
+
+.table-container {
+    overflow-x: scroll;
+    @media screen and (min-width: "999px") {
+        overflow-x: initial;
+    }
+}
+
+.btns {
+    display: flex;
+    gap: 10px;
+    padding: 30px 0;
+}
+
+.btn {
+    border: none;
+    font-size: 13px;
+    white-space: nowrap;
+    width: 100%;
+}
+.btn-pad {
+    padding: 8px 10px;
+}
+//button midnight-navy background
+.btn-mv {
+    color: var(--gray-200);
+    background-color: var(--midnight-navy);
+    transition: var(--speed-3) ease;
+    cursor: pointer;
+    &:hover {
+        color: var(--midnight-navy);
+        background-color: var(--gray-200);
+        font-weight: 600;
+    }
+}
+
+//button bluish-green background
+.btn-wh {
+    background-color: var(--green-600);
+    color: var(--gray-200);
+    transition: var(--speed-3) ease;
+    cursor: pointer;
+    &:hover {
+        color: var(--green-600);
+        background-color: var(--gray-200);
+        font-weight: 600;
+    }
+}
+
+//button transparent bg
+.btn-tr {
+    background-color: var(--tranparent);
+    border: 1px solid var(--midnight-navy);
+    border-radius: var(--border-radius-6);
+    transition: var(--speed-3) ease;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--green-600);
+    }
+}
+
+.delBtn {
+    background-color: var(--red-600);
+}
+
+.empty {
+    width: 100%;
+}
+
+.link {
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+}
+
+// .mini {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     width: 300px;
+// }
+
+.pad30 {
+    padding: 30px;
+    @media screen and (max-width: "877px") {
+        padding: 10px;
+    }
+}
+
+.reports-span {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 8px;
+
+    .reports-figure {
+        font-size: 20px;
+        color: var(--midnight-navy);
+    }
+    .reports-name {
+        font-size: 14px;
+        color: var(--gray-900);
+        text-transform: capitalize;
+    }
+    .num-of-accounts {
+        font-size: 12px;
+        color: var(--midnight-navy);
+        &__num {
+            color: var(--red-600);
+        }
+    }
+}
+
+.reports-icon {
+    font-size: 90px;
+    color: var(--green-600);
+}
+.report-btn-bg {
+    background-color: var(--gray-200);
+
+    &:hover {
+        background-color: var(--gray-300);
+    }
+}
+.h3 {
+    font-size: 23px;
+    padding: 16px 0;
+    color: var(--gray-200);
+}

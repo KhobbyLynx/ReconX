@@ -1,0 +1,23 @@
+.bank-accounts {
+    padding: 30px;
+
+    h3 {
+        font-size: 23px;
+        padding: 16px 0;
+        color: var(--gray-200);
+    }
+
+    .th {
+        width: initial;
+    }
+
+    .tr {
+        td {
+            &:nth-of-type(odd) {
+                background-color: var(--gray-200);
+            }
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+    }
+}

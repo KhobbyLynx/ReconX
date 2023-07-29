@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=League+Spartan:wght@200;400;600;700;800;900&family=Nosifer&display=swap");
+
+:root {
+    --League-spartan: "League Spartan", sans-serif;
+    --Inknut-Antiqua: "Inknut Antiqua", serif;
+    --Nosifer: "Nosifer", cursive;
+    --Inter: "Inter", sans-serif;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 100%;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", Avenir, "League Spartan", Arial, sans-serif;
+    background-color: var(--white);
+    color: var(--gray-500);
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style: none;
+}

@@ -1,0 +1,56 @@
+:root {
+    /* Main Colors */
+    --primary-bg: #05141f;
+    --secondary-bg: #346885;
+    --tertiary-bg: #c2d2dd;
+    --midnight-navy: #05141f;
+    --bluish-green: #346885;
+    --misty-sky: #c2d2dd;
+    --tranparent: #fff0;
+    --border-radius-6: 6px;
+    --border-radius-10: 10px;
+    --speed-3: 300ms;
+    --speed-6: 600ms;
+
+    /* RGB BW */
+    --red: #f00;
+    --green: #0f0;
+    --blue: #00f;
+    --black: #000;
+    --white: #fff;
+
+    /* Black shadow layer */
+    --bs-6: rgba(0, 0, 0, 0.6);
+
+    /* Shadows */
+    --lg: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    --rg: radial-gradient(#e66465, #9198e5);
+
+    /* Other colors */
+    --link: #4a90f9;
+    --link-hover: #8f6900;
+    --span: #d63384;
+
+    /* Gray */
+    --gray-100: #ffffff;
+    --gray-200: #f5f5f5;
+    --gray-300: #d6d6d6;
+    --gray-400: #c2c2c2;
+    --gray-500: #a3a3a3;
+    --gray-600: #7a7a7a;
+    --gray-700: #5c5c5c;
+    --gray-800: #292929;
+    --gray-900: #000000;
+
+    /* Green */
+    --green-300: #91d671;
+    --green-400: #6cc841;
+    --green-500: #5aae32;
+    --green-600: #007f5f;
+
+    /* Red */
+    --red-300: #ff4763;
+    --red-400: #ff3352;
+    --red-500: #f0052c;
+    --red-600: #f50025;
+}

@@ -1,0 +1,36 @@
+.no-accounts {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    min-height: 200px;
+    padding-top: 60px;
+
+    &__icon-container {
+        display: flex;
+        padding: 20px;
+        background-color: var(--gray-300);
+        border-radius: 20px;
+        margin-bottom: 26px;
+    }
+
+    &__icon {
+        font-size: 64px;
+    }
+
+    &__title {
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+
+    &__btn {
+        padding: 14px 23px;
+        font-size: 13px;
+        border: none;
+        border-radius: 6px;
+        text-transform: uppercase;
+        background-color: var(--green-400);
+        color: var(--gray-100);
+    }
+}
