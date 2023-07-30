@@ -116,7 +116,7 @@ const CreateAccount = () => {
           setErrorMsg(error.response.data.message)
         } else if (statusCode === 500) {
           setErrorMsg(error.response.statusText)
-        } else setErrorMsg('something went wrong')
+        } else setErrorMsg(`something went wrong, ${error}`)
         return
       } finally {
         setIsPending(false)

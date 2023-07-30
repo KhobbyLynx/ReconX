@@ -83,12 +83,12 @@
     color: var(--span);
 }
 
-.table-container {
-    overflow-x: scroll;
-    @media screen and (min-width: "999px") {
-        overflow-x: initial;
-    }
-}
+// .table-container {
+//     overflow-x: scroll;
+//     @media screen and (min-width: "999px") {
+//         overflow-x: initial;
+//     }
+// }
 
 .btns {
     display: flex;
@@ -155,17 +155,6 @@
 .link {
     text-align: center;
 }
-
-.grid {
-    display: grid;
-}
-
-// .mini {
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     width: 300px;
-// }
 
 .pad30 {
     padding: 30px;

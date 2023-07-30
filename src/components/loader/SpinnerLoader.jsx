@@ -1,12 +1,12 @@
 import React from 'react'
-import HashLoader from 'react-spinners/HashLoader'
+import MoonLoader from 'react-spinners/MoonLoader'
 
 const SpinnerLoader = () => {
   return (
     <>
       <div className='overlay z-index' />
       <div className='request-loader'>
-        <HashLoader color='#5aae32' loading size={60} />
+        <MoonLoader color='#5aae32' loading size={50} />
       </div>
     </>
   )

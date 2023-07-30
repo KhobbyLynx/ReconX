@@ -12,8 +12,15 @@ const BankAccounts = () => {
   const [selectAll, setSelectAll] = useState(false)
 
   const getAccounts = async () => {
-    const res = await newRequest.get('/accounts')
-    setAccounts(res.data)
+    setIsPending(true)
+    try {
+      const res = await newRequest.get('/accounts')
+      setAccounts(res.data)
+      setIsPending(false)
+    } catch (error) {
+      console.log(error)
+      setIsPending(false)
+    }
   }
 
   useEffect(() => {
@@ -85,7 +92,7 @@ const BankAccounts = () => {
     <div className='bank-accounts'>
       <h3>Bank Account(s)</h3>
       <div className='table-container'>
-        <table className={`${accounts.length === 0 && 'grid'}`}>
+        <table>
           <thead>
             <tr>
               <th className='th'>No.</th>
@@ -93,15 +100,17 @@ const BankAccounts = () => {
               <th>account number</th>
               <th>bank</th>
               <th>branch</th>
-              <th>
-                <input
-                  id='selectAll'
-                  type='checkbox'
-                  name='selectAll'
-                  checked={selectAll}
-                  onChange={handleSelectAllChange}
-                />
-              </th>
+              {accounts.length !== 0 && (
+                <th>
+                  <input
+                    id='selectAll'
+                    type='checkbox'
+                    name='selectAll'
+                    checked={selectAll}
+                    onChange={handleSelectAllChange}
+                  />
+                </th>
+              )}
             </tr>
           </thead>
           {accounts.length !== 0 ? (

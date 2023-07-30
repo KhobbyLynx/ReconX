@@ -142,23 +142,7 @@ const AccountDetails = () => {
 
     return buttons
   }
-  // const getSingleAccount = async () => {
-  //   setIsPending(true)
-  //   try {
-  //     const res = await newRequest.get(`/accounts/${id}`)
-  //     console.log('SingleAccountData', res.data)
-  //     setAccountData(res.data)
-  //     setIsPending(false)
-  //   } catch (error) {
-  //     console.log(error)
-  //     setIsPending(false)
-  //   }
-  // }
 
-  // useEffect(() => {
-  //   getSingleAccount()
-  // }, [])
-  // console.log('accountData', )
   return (
     <div>
       <div className='account-details'>
