@@ -15,9 +15,22 @@ const Reconcile = () => {
   } = useGlobalContext()
 
   const getAccounts = async () => {
-    const res = await newRequest.get('/accounts')
-    setAccounts(res.data)
+    setIsPending(true)
+    setCheckedAccountId(null)
+    try {
+      const res = await newRequest.get('/accounts')
+
+      setAccounts(accounts)
+      setIsPending(false)
+    } catch (error) {
+      console.error('Error fetching array data:', error)
+      setIsPending(false)
+    }
   }
+
+  const fileteredArray = accounts.filter(
+    (account) => account.reconciled !== true
+  )
 
   useEffect(() => {
     getAccounts()
@@ -49,7 +62,7 @@ const Reconcile = () => {
           </thead>
           {accounts.length !== 0 ? (
             <tbody>
-              {accounts.map((account, i) => (
+              {fileteredArray.map((account, i) => (
                 <tr key={i}>
                   <td className='th'>{i + 1}</td>
                   <td>{account.name}</td>
@@ -70,6 +83,7 @@ const Reconcile = () => {
           ) : null}
         </table>
       </div>
+
       {accounts.length === 0 && (
         <div className='empty'>
           <EmptyAccounts />

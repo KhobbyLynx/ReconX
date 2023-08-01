@@ -1,4 +1,5 @@
 .account-details {
+    padding: 0 30px 30px;
     h3 {
         font-size: 23px;
         padding: 16px 0;
@@ -13,10 +14,19 @@
         td,
         th {
             min-width: 300px;
-
+            display: flex;
             @media screen and (max-width: "877px") {
                 min-width: 160px;
             }
         }
     }
+}
+.transactions {
+    padding: 20px;
+}
+.pagination-btns {
+    display: flex;
+    width: 50%;
+    gap: 14px;
+    padding-bottom: 30px;
 }

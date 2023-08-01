@@ -8,7 +8,7 @@ const UnknownTransfers = () => {
   const unknownTransfersArray = reconciledAccountsState.flatMap(
     (item) => item.misMatched
   )
-
+  const chunkOfUnknownTransfers = unknownTransfersArray.slice(0, 10)
   const navigate = useNavigate()
   const handleGoBack = () => {
     navigate(-1)
@@ -32,15 +32,15 @@ const UnknownTransfers = () => {
               </tr>
             </thead>
             <tbody>
-              {unknownTransfersArray.map((data, index) => (
+              {chunkOfUnknownTransfers.map((data, index) => (
                 <tr key={index}>
-                  <td>{data['POST DATE']}</td>
-                  <td>{data['PARTICULARS']}</td>
-                  <td>{data['REFERENCE']}</td>
-                  <td>{data['VALUE DATE']}</td>
-                  <td>{data['DEBIT AMOUNT']}</td>
-                  <td>{data['CREDIT AMOUNT']}</td>
-                  <td>{data['BALANCE']}</td>
+                  <td>{data.postdate}</td>
+                  <td>{data.particulars}</td>
+                  <td>{data.reference}</td>
+                  <td>{data.valuedate}</td>
+                  <td>{data.debitamount}</td>
+                  <td>{data.creditamount}</td>
+                  <td>{data.balance}</td>
                 </tr>
               ))}
             </tbody>

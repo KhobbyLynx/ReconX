@@ -15,15 +15,13 @@ const ReconciledAccountDetails = () => {
     (obj) => obj.id === id
   )[0].matched
   const trElements = selectedAccount.map((entry, index) => {
-    const debitDate = entry.singleEntry['VALUE DATE']
-    const creditDate = entry.matchedEntry['VALUE DATE']
+    const debitDate = entry.singleEntry.postdate
+    const creditDate = entry.matchedEntry.postdate
     const delayDays = Math.floor(
       creditDate.split('/')[0] - debitDate.split('/')[0]
     )
-    const creditReference = entry.matchedEntry['REFERENCE']
-    const amount = parseFloat(
-      entry.singleEntry['DEBIT AMOUNT'].replace(/[^0-9.-]+/g, '')
-    )
+    const creditReference = entry.matchedEntry.reference
+    const amount = parseFloat(entry.singleEntry.debitamount)
 
     return (
       <tr key={index}>

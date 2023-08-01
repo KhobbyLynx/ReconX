@@ -23,7 +23,7 @@ const SetDelayDays = () => {
     SetDelayDays(value)
   }
 
-  console.log('accountsToMapTO========', accountsToMapTo)
+  console.log('accountsToMapT0========', accountsToMapTo)
   console.log('accounToReconcile', accounToReconcile)
 
   const navigate = useNavigate()
@@ -35,12 +35,15 @@ const SetDelayDays = () => {
       const res = await newRequest.get('/reconcile', {
         params: { accountIds: accountsToMapToId },
       })
+
       const multipleObjects = res.data
-      console.log('multipleObjects', multipleObjects)
-      const multipleArrays = multipleObjects.map((obj) => obj)
 
-      const accountToReconcileData = accounToReconcile.file
+      const multipleArrays = multipleObjects.map((obj) => obj.jsonData)
 
+      console.log('-----multipleArrays-------', multipleArrays)
+      const accountToReconcileData = accounToReconcile.jsonData
+
+      console.log('-----accountToReconcileData-------', accountToReconcileData)
       result = reconcile(accountToReconcileData, multipleArrays, delayDays)
 
       const currentDate = new Date()
@@ -52,15 +55,24 @@ const SetDelayDays = () => {
       const reconciledObj = result.matched?.map((obj) => obj.singleEntry)
 
       const reconcileAmount = calculateTotalDebitAmount(reconciledObj)
+      console.log('reconcileAmount', reconcileAmount)
+      // const unknownAmount = calculateTotalDebitAmount(result.misMatched)
 
-      const unknownAmount = calculateTotalDebitAmount(result.misMatched)
+      const unknownAmount = result.misMatched?.reduce((accumulator, obj) => {
+        const amountAsNumber = parseFloat(obj.debitamount)
+        if (!isNaN(amountAsNumber)) {
+          return accumulator + amountAsNumber
+        }
+        return accumulator
+      }, 0)
 
+      console.log('unknownAmount', unknownAmount)
       function calculateTotalDebitAmount(objArray) {
         let totalDebitAmount = 0
 
         for (const obj of objArray) {
-          const debitAmountString = obj['DEBIT AMOUNT']
-          const debitAmountNumber = Number(debitAmountString.replace(/,/g, ''))
+          const debitAmountString = obj.debitamount
+          const debitAmountNumber = Number(debitAmountString)
           totalDebitAmount += debitAmountNumber
         }
 

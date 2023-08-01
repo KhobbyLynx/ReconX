@@ -23,13 +23,13 @@ table {
         padding: $tableCellPadding;
         text-align: left;
         border-bottom: 1px solid $secondaryColor;
+        font-size: 13px;
+        color: var(--midnight-navy);
     }
 
     th {
         background-color: $tableHeaderBackground;
         text-transform: uppercase;
-        font-size: 13px;
-        color: var(--gray-900);
     }
 
     // Alternate row background colors for better readability

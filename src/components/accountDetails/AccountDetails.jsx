@@ -1,11 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import './AccountDetails.scss'
 
-import TransactionDetails from '../transactionsDetails/TransactionDetails'
-import AccountInfo from '../account/AccountInfo'
 import { useParams } from 'react-router-dom'
 import newRequest from '../../utils/newRequest'
 import { useGlobalContext } from '../context/Context'
+import memoryCache from 'memory-cache'
+
+const formatDate = (inputDate) => {
+  if (!inputDate || typeof inputDate !== 'string') {
+    return '' // Return an empty string or some default value for invalid input
+  }
+
+  // Split the date using any separator (such as "/", "-", or ".")
+  const parts = inputDate.split(/[/\-.]/)
+  if (parts.length === 3) {
+    // If the input date has three parts, assume it's in "dd/mm/yyyy" format
+    const [day, month, year] = parts
+    return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`
+  } else {
+    // If the input date cannot be split into three parts, return the original input
+    return inputDate
+  }
+}
 
 const AccountDetails = () => {
   const { setIsPending, isPending } = useGlobalContext()
@@ -13,93 +29,161 @@ const AccountDetails = () => {
   const { id } = useParams()
 
   const [data, setData] = useState([])
+
   const [totalPages, setTotalPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const pageSize = 10
-  const accountDataArray = accountData.file
-  const totalTransactions = accountData.file?.length
 
-  function formatDate(date) {
-    if (!date) return
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const year = date.getFullYear()
-    return `${day}/${month}/${year}`
-  }
+  const [totalCreditAmount, setTotalCreditAmount] = useState(0)
+  const [dateRange, setDateRange] = useState('')
+  const [totalDebitAmount, setTotalDebitAmount] = useState(0)
+  const [balance, setBalance] = useState(0)
+  const [paginatedData, setPaginatedData] = useState([]) // Add paginatedData state
 
-  console.log('<<<<<<<<<accountData>>>>>>>>', accountData)
+  const [totalTransactions, setTotalTransactions] = useState(0)
 
-  // const postDates = accountData?.map((obj) => new Date(obj['POST DATE']))
-  // const minDate = new Date(Math.min(...postDates))
-  // const maxDate = new Date(Math.max(...postDates))
-  // console.log('POST DATES+++++++', postDates)
-
-  // const formattedMinDate = formatDate(minDate)
-  // const formattedMaxDate = formatDate(maxDate)
-
-  const totalCreditAmount = calculateTotalAmount(
-    accountDataArray,
-    'CREDIT AMOUNT'
-  )
-  const totalDebitAmount = calculateTotalAmount(
-    accountDataArray,
-    'DEBIT AMOUNT'
-  )
-
-  const balance = totalCreditAmount - totalDebitAmount
-  function calculateTotalAmount(accountDataArray, key) {
-    // Function to find the key in a case-insensitive manner
-    function findKey(obj, key) {
-      const lowercaseKeys = Object.keys(obj).map((k) => k.toLowerCase())
-      const lowercaseKeyIndex = lowercaseKeys.indexOf(key.toLowerCase())
-      return lowercaseKeyIndex !== -1
-        ? Object.keys(obj)[lowercaseKeyIndex]
-        : undefined
-    }
-
-    const totalAmount = accountDataArray?.reduce((accumulator, obj) => {
-      const actualKey = findKey(obj, key)
-      if (actualKey !== undefined) {
-        const amountWithoutComma = obj[actualKey].replace(/,/g, '')
-        const amountAsNumber = parseFloat(amountWithoutComma)
-        if (!isNaN(amountAsNumber)) {
-          return accumulator + amountAsNumber
-        }
-      }
-      return accumulator
-    }, 0)
-
-    return totalAmount
-  }
+  // Calculate the start and end index of the current page's data
+  const pageSize = 20
 
   useEffect(() => {
-    fetchArrayData(currentPage)
+    // Update paginatedData whenever data or currentPage changes
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    if (startIndex < data.length) {
+      setPaginatedData(data.slice(startIndex, endIndex))
+    }
+  }, [data, currentPage])
+
+  useEffect(() => {
+    fetchAccountData(currentPage)
   }, [currentPage])
 
-  const fetchArrayData = async (pageNumber) => {
+  useEffect(() => {
+    // Update paginatedData whenever data or currentPage changes
+    const startIndex = (currentPage - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    if (startIndex < data.length) {
+      setPaginatedData(data.slice(startIndex, endIndex))
+    }
+  }, [data, currentPage])
+
+  const fetchAccountData = async (pageNumber) => {
     setIsPending(true)
     try {
-      const response = await newRequest.get(
-        `/accounts/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-        { params: { accountId: id } }
-      )
+      // Check if the paginated data is already in the cache
+      const cacheKey = `accountData_${id}_${pageNumber}`
+      const cachedData = await fetchCachedData(cacheKey)
+
+      if (cachedData) {
+        console.log('=====ACCOUNT DATA FETCHED FROM CACHE=====', cachedData)
+        updateStateWithCachedData(cachedData)
+        setIsPending(false)
+        return
+      }
+
+      // If not in cache, fetch the data from the server
+      const response = await newRequest.get(`/accounts/${id}`, {
+        params: { accountId: id, page: pageNumber },
+      })
+
       console.log('<<<<<response>>>>>', response)
-      setData(response.data.file)
-      setTotalPages(response.data.totalPages)
-      setAccountData(response.data)
+
+      const details = response.data
+      const {
+        jsonData,
+        totalItems,
+        totalCreditAmount,
+        totalDebitAmount,
+        dateRange,
+      } = response.data
+      setData(jsonData)
+      setAccountData(details)
+      setTotalTransactions(totalItems)
+      setTotalCreditAmount(totalCreditAmount)
+      setTotalDebitAmount(totalDebitAmount)
+      setDateRange(dateRange)
+      setBalance(totalCreditAmount - response.data.totalDebitAmount)
+
+      // Store the paginated data in cache
+      const cacheDuration = 60 * 60 * 1000 // 1 hour
+      const cacheData = {
+        details,
+        jsonData,
+        totalItems,
+        totalCreditAmount,
+        totalDebitAmount,
+        dateRange,
+      }
+
+      await cacheDataInMemory(cacheKey, cacheData, cacheDuration)
+
+      // Calculate totalPages based on the totalItems and pageSize
+      const totalPages = Math.ceil(response.data.totalItems / pageSize)
+      setTotalPages(totalPages)
+
+      // Update the paginatedData state with the newly fetched data
+      setPaginatedData(jsonData)
+
       setIsPending(false)
     } catch (error) {
-      console.error('Error fetching array data:', error)
+      console.error('Error fetching account data:', error)
       setIsPending(false)
     }
   }
-  const maxPaginationButtons = 5 // Change this value to adjust the number of pagination buttons
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
+  const fetchCachedData = async (cacheKey) => {
+    // Check if the data is in the cache
+    const cachedData = memoryCache.get(cacheKey)
+
+    // Return the cached data if available, otherwise return null
+    return cachedData || null
   }
 
+  const cacheDataInMemory = async (cacheKey, data, cacheDuration) => {
+    // Convert the cache duration from minutes to milliseconds
+    const cacheDurationMillis = cacheDuration * 60 * 1000
+
+    // Store the data in the cache with the provided cacheKey and cacheDuration
+    memoryCache.put(cacheKey, data, cacheDurationMillis)
+  }
+
+  const updateStateWithCachedData = (cachedData) => {
+    const accDetails = cachedData.details
+    setData(cachedData.jsonData)
+    setAccountData(accDetails)
+    setTotalTransactions(cachedData.totalItems)
+    setTotalCreditAmount(cachedData.totalCreditAmount)
+    setTotalDebitAmount(cachedData.totalDebitAmount)
+    setDateRange(cachedData.dateRange)
+    setBalance(cachedData.totalCreditAmount - cachedData.totalDebitAmount)
+    setPaginatedData(cachedData.jsonData)
+  }
+
+  const handlePageChange = async (pageNumber) => {
+    console.log('=====Page Change Requested=====', pageNumber)
+    setCurrentPage(pageNumber)
+
+    // Check if the paginated data is already in the cache
+    const cacheKey = `accountData_${id}_${pageNumber}`
+    const cachedData = await fetchCachedData(cacheKey)
+
+    if (cachedData) {
+      console.log('=====ACCOUNT DATA FETCHED FROM CACHE=====', cachedData)
+      // Update the state with the cached data
+      updateStateWithCachedData(cachedData)
+    } else {
+      console.log('=====FETCHING ACCOUNT DATA FROM SERVER=====')
+      // Fetch the data from the server
+      fetchAccountData(pageNumber)
+    }
+  }
+
+  const maxPaginationButtons = 5
+
   const renderPaginationButtons = () => {
+    if (isPending) {
+      return <div>Loading...</div>
+    }
+
     let startPage = Math.max(
       1,
       currentPage - Math.floor(maxPaginationButtons / 2)
@@ -112,30 +196,58 @@ const AccountDetails = () => {
 
     const buttons = []
 
+    if (currentPage > 1) {
+      buttons.push(
+        <button
+          className='btn btn-mv pagination-btn'
+          key='first'
+          onClick={() => handlePageChange(1)}
+        >
+          First
+        </button>
+      )
+      buttons.push(
+        <button
+          className='btn btn-wh pagination-btn'
+          key='prev'
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          Previous
+        </button>
+      )
+    }
+
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
         <button
+          className={`btn pagination-btn ${
+            i === currentPage ? 'btn-tr' : 'btn-wh'
+          }`}
           key={i}
           onClick={() => handlePageChange(i)}
-          disabled={i === currentPage}
         >
           {i}
         </button>
       )
     }
 
-    if (currentPage > 1) {
-      buttons.unshift(
-        <button key='prev' onClick={() => handlePageChange(currentPage - 1)}>
-          Previous
-        </button>
-      )
-    }
-
     if (currentPage < totalPages) {
       buttons.push(
-        <button key='next' onClick={() => handlePageChange(currentPage + 1)}>
+        <button
+          className='btn btn-wh pagination-btn'
+          key='next'
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
           Next
+        </button>
+      )
+      buttons.push(
+        <button
+          className='btn btn-mv pagination-btn'
+          key='last'
+          onClick={() => handlePageChange(totalPages)}
+        >
+          Last
         </button>
       )
     }
@@ -144,7 +256,7 @@ const AccountDetails = () => {
   }
 
   return (
-    <div>
+    <div className='detailed'>
       <div className='account-details'>
         <h3>Account Details</h3>
         <div className='mini'>
@@ -160,7 +272,7 @@ const AccountDetails = () => {
                   <th>Total Debit</th>
                   <th>Total Credit</th>
                   <th>Balance</th>
-                  {/* <th>Period</th> */}
+                  <th>Period</th>
                 </tr>
               </thead>
               <tbody>
@@ -169,9 +281,13 @@ const AccountDetails = () => {
                   <td>{accountData?.number}</td>
                   <td>{accountData?.bank}</td>
                   <td>{accountData?.branch}</td>
-                  <td>{totalTransactions}</td>
                   <td>
-                    {totalCreditAmount &&
+                    {totalTransactions.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })}
+                  </td>
+                  <td>
+                    {totalDebitAmount &&
                       totalDebitAmount.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
@@ -191,8 +307,7 @@ const AccountDetails = () => {
                         maximumFractionDigits: 2,
                       })}
                   </td>
-                  {/* <td>{`${formattedMinDate} - ${formattedMaxDate}`}</td> */}
-                  {/* <td>Hellooo</td> */}
+                  <td>{dateRange}</td>
                 </tr>
               </tbody>
             </table>
@@ -200,7 +315,7 @@ const AccountDetails = () => {
         </div>
       </div>
       <div className='transactions'>
-        <h3>Transaction Details</h3>
+        <h3 className='h3'>Transaction Details</h3>
         <div className='table-container'>
           <table>
             <thead>
@@ -215,33 +330,26 @@ const AccountDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map((item, index) => (
+              {paginatedData?.map((item, index) => (
                 <tr key={index}>
-                  <td>{item['POST DATE']}</td>
+                  <td>{item.postdate}</td>
+                  <td>{item.particulars}</td>
+                  <td>{item.reference}</td>
+                  <td>{item.valuedate}</td>
+                  <td>{item.debitamount}</td>
+                  <td>{item.creditamount}</td>
                   <td>
-                    {item['PARTICULARS'] &&
-                      item['PARTICULARS'].substring(0, 20) + '...'}
+                    {item.balance?.toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                      minimumFractionDigits: 2,
+                    })}
                   </td>
-                  <td>{item['REFERENCE']}</td>
-                  <td>{item['VALUE DATE']}</td>
-                  <td>{item['DEBIT AMOUNT']}</td>
-                  <td>{item['CREDIT AMOUNT']}</td>
-                  <td>{item['BALANCE']}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div>
-          <div>
-            {/* {Array.from({ length: totalPages }, (_, index) => (
-              <button key={index} onClick={() => handlePageChange(index + 1)}>
-                {index + 1}
-              </button>
-            ))} */}
-          </div>
-          {renderPaginationButtons()}
-        </div>
+        <div className='pagination-btns'>{renderPaginationButtons()}</div>
       </div>
     </div>
   )

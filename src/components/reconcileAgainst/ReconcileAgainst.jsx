@@ -18,12 +18,14 @@ const ReconcileAgainst = () => {
     accountsToMapToId,
     reconciledAccountsState,
   } = useGlobalContext()
-  // const [accountsToMapToId, setAccountsToMapToId] = useState([])
   const [selectAll, setSelectAll] = useState(false)
   const { id } = useParams()
 
   const reconciledAccountsStateId = reconciledAccountsState.map((obj) => obj.id)
-  const newArray = accounts.filter((account) => account._id !== id)
+  const filteredArray = accounts.filter((account) => account._id !== id)
+  const newArray = filteredArray.filter(
+    (account) => account.reconciled !== true
+  )
 
   const getAccounts = async () => {
     const res = await newRequest.get('/accounts')
@@ -42,7 +44,7 @@ const ReconcileAgainst = () => {
     getAccountToReconcile()
   }, [])
 
-  // console.log('accountsToMapTo', accountsToMapTo)
+  console.log('accountsToMapTo', accountsToMapTo)
 
   const handleSelectAllChange = (event) => {
     setSelectAll(event.target.checked)
@@ -66,8 +68,8 @@ const ReconcileAgainst = () => {
     })
   }
 
-  // console.log('accountsToMapToId', accountsToMapToId)
-  // console.log('accounts', accounts)
+  console.log('accountsToMapToId', accountsToMapToId)
+  console.log('accounts', accounts)
 
   const navigate = useNavigate()
   const handleNextClick = () => {

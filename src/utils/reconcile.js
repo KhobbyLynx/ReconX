@@ -15,60 +15,44 @@ function convertToUniformDateFormat(dateString) {
 }
 
 function reconcile(singleAccount, multipleAccounts, delayDays = 0) {
-  singleAccount = singleAccount.filter((entry) => {
-    const debitAmount = entry['DEBIT AMOUNT']
-    if (debitAmount) {
-      // Add a check to ensure debitAmount is defined before using replace
-      const parsedDebitAmount = parseFloat(debitAmount.replace(/[^\d.-]/g, ''))
-      return !isNaN(parsedDebitAmount)
-    }
-    return false
-  })
   multipleAccounts = multipleAccounts.flat().filter((entry) => {
-    const creditAmount = entry['CREDIT AMOUNT']
+    const creditAmount = entry.creditamount
     if (creditAmount) {
       // Add a check to ensure creditAmount is defined before using replace
-      const parsedCreditAmount = parseFloat(
-        creditAmount.replace(/[^\d.-]/g, '')
-      )
+      const parsedCreditAmount = parseFloat(creditAmount)
       return !isNaN(parsedCreditAmount)
     }
     return false
   })
 
-  console.log(singleAccount.length)
-  console.log(multipleAccounts.length)
+  console.log('SINGLE ACCOUNT LENGTH', singleAccount?.length)
+  console.log('MULTI ACC LENGTH', multipleAccounts?.length)
 
   const matched = []
   const misMatched = []
 
   for (const singleEntry of singleAccount) {
-    const dateStr = singleEntry['VALUE DATE']
+    const dateStr = singleEntry.postdate
     const formatedDateStr = convertToUniformDateFormat(dateStr)
-    console.log('dateStr', dateStr)
-    console.log('formatedDateStr', formatedDateStr)
+
     const [day, month, year] = formatedDateStr.split('/').map(Number)
     const debitDate = new Date(year, month - 1, day)
     const startTimestamp = debitDate.getTime()
     const endTimestamp = debitDate.getTime() + delayDays * 86400000
 
-    const debitAmount = parseFloat(
-      singleEntry['DEBIT AMOUNT'].replace(/[^\d.-]/g, '')
-    )
+    const debitAmount = parseFloat(singleEntry.debitamount)
 
     let foundMatch = false
 
     for (let i = 0; i < multipleAccounts.length; i++) {
       const entry = multipleAccounts[i]
-      const dateStr = entry['VALUE DATE']
+      const dateStr = entry.postdate
       const formatedDateStr = convertToUniformDateFormat(dateStr)
       const [day, month, year] = formatedDateStr.split('/').map(Number)
       const creditDate = new Date(year, month - 1, day)
       const timestamp = creditDate.getTime()
 
-      const creditAmount = parseFloat(
-        entry['CREDIT AMOUNT'].replace(/[^\d.-]/g, '')
-      )
+      const creditAmount = parseFloat(entry.creditamount)
 
       if (
         timestamp >= startTimestamp &&

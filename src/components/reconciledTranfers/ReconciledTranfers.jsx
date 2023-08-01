@@ -26,7 +26,7 @@ const ReconciledTranfers = () => {
           <tbody>
             {reconciledAccountsState &&
               reconciledAccountsState.map((obj, i) => (
-                <tr key={obj.id}>
+                <tr key={obj._id}>
                   <td>{i + 1}</td>
                   <td>{obj.name}</td>
                   <td>{obj.number}</td>

@@ -7,12 +7,10 @@ import SuccessModal from '../components/SuccessModal'
 import SpinnerLoader from '../components/loader/SpinnerLoader'
 import ErrorModal from '../components/ErrorModal'
 import { useGlobalContext } from '../components/context/Context'
-import SetDelayDays from '../components/SetDelayDays'
 
 const MainLayout = () => {
   const [toggle, setToggle] = useState(false)
   const [errorMsg, setErrorMsg] = useState()
-  console.log('error', errorMsg)
 
   const { open, setOpen, isPending, setIsPending } = useGlobalContext()
 
