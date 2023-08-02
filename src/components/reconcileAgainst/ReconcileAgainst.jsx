@@ -33,8 +33,12 @@ const ReconcileAgainst = () => {
   }
 
   const getAccountToReconcile = async () => {
-    const res = await newRequest.get(`/accounts/${checkedAccountId}`)
-    setAccounToReconcile(res.data)
+    try {
+      const res = await newRequest.get(`/reconcile/${checkedAccountId}`)
+      setAccounToReconcile(res.data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   console.log('AccountToReconcile', accounToReconcile)
@@ -69,7 +73,7 @@ const ReconcileAgainst = () => {
   }
 
   console.log('accountsToMapToId', accountsToMapToId)
-  console.log('accounts', accounts)
+  // console.log('accounts', accounts)
 
   const navigate = useNavigate()
   const handleNextClick = () => {

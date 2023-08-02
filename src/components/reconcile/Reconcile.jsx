@@ -20,7 +20,7 @@ const Reconcile = () => {
     try {
       const res = await newRequest.get('/accounts')
 
-      setAccounts(accounts)
+      setAccounts(res.data)
       setIsPending(false)
     } catch (error) {
       console.error('Error fetching array data:', error)

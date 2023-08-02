@@ -18,7 +18,6 @@ function reconcile(singleAccount, multipleAccounts, delayDays = 0) {
   multipleAccounts = multipleAccounts.flat().filter((entry) => {
     const creditAmount = entry.creditamount
     if (creditAmount) {
-      // Add a check to ensure creditAmount is defined before using replace
       const parsedCreditAmount = parseFloat(creditAmount)
       return !isNaN(parsedCreditAmount)
     }

@@ -4,7 +4,6 @@ import { useGlobalContext } from '../context/Context'
 
 const ReconciledAccounts = () => {
   const { reconciledAccountsState } = useGlobalContext()
-  const reconciledAccounts = reconciledAccountsState.map((obj) => obj)
   const navigate = useNavigate()
   const handleGoBack = () => {
     navigate(-1)

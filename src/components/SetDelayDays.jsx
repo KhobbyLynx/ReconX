@@ -23,8 +23,8 @@ const SetDelayDays = () => {
     SetDelayDays(value)
   }
 
-  console.log('accountsToMapT0========', accountsToMapTo)
-  console.log('accounToReconcile', accounToReconcile)
+  console.log('==========accountsToMapTo=========', accountsToMapTo)
+  console.log('>>>>>>>>accounToReconcile<<<<<<<<<', accounToReconcile)
 
   const navigate = useNavigate()
 
@@ -38,13 +38,17 @@ const SetDelayDays = () => {
 
       const multipleObjects = res.data
 
-      const multipleArrays = multipleObjects.map((obj) => obj.jsonData)
+      const allArrays = []
 
-      console.log('-----multipleArrays-------', multipleArrays)
+      multipleObjects.forEach((obj) => {
+        allArrays.push(...obj.processedData.jsonData)
+      })
+
+      console.log('-----multipleArrays-------', allArrays)
       const accountToReconcileData = accounToReconcile.jsonData
 
       console.log('-----accountToReconcileData-------', accountToReconcileData)
-      result = reconcile(accountToReconcileData, multipleArrays, delayDays)
+      result = reconcile(accountToReconcileData, allArrays, delayDays)
 
       const currentDate = new Date()
 
@@ -56,7 +60,6 @@ const SetDelayDays = () => {
 
       const reconcileAmount = calculateTotalDebitAmount(reconciledObj)
       console.log('reconcileAmount', reconcileAmount)
-      // const unknownAmount = calculateTotalDebitAmount(result.misMatched)
 
       const unknownAmount = result.misMatched?.reduce((accumulator, obj) => {
         const amountAsNumber = parseFloat(obj.debitamount)
@@ -105,8 +108,8 @@ const SetDelayDays = () => {
       setIsPending(false)
       console.log('Reconcile Error', error)
     } finally {
+      setIsPending(false)
       if (result) {
-        setIsPending(false)
         navigate('/reports')
         setAccountsToMapTo([])
       }

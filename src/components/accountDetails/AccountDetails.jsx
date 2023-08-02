@@ -57,15 +57,6 @@ const AccountDetails = () => {
     fetchAccountData(currentPage)
   }, [currentPage])
 
-  useEffect(() => {
-    // Update paginatedData whenever data or currentPage changes
-    const startIndex = (currentPage - 1) * pageSize
-    const endIndex = startIndex + pageSize
-    if (startIndex < data.length) {
-      setPaginatedData(data.slice(startIndex, endIndex))
-    }
-  }, [data, currentPage])
-
   const fetchAccountData = async (pageNumber) => {
     setIsPending(true)
     try {
