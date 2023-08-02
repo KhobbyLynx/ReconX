@@ -87,6 +87,16 @@ const ReconcileAgainst = () => {
   const handleBack = () => {
     navigate(-1)
   }
+
+  const handleRowClick = (accountId) => {
+    setAccountsToMapToId((prevAccountsToMapToId) => {
+      if (prevAccountsToMapToId.includes(accountId)) {
+        return prevAccountsToMapToId.filter((id) => id !== accountId)
+      } else {
+        return [...prevAccountsToMapToId, accountId]
+      }
+    })
+  }
   return (
     <div>
       <div className='bank-accounts'>
@@ -112,7 +122,7 @@ const ReconcileAgainst = () => {
             </thead>
             <tbody>
               {newArray.map((account, i) => (
-                <tr key={i}>
+                <tr key={i} onClick={() => handleRowClick(account._id)}>
                   <td className='th'>{i + 1}</td>
                   <td>{account.name}</td>
                   <td>{account.number}</td>

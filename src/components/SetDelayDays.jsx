@@ -35,7 +35,7 @@ const SetDelayDays = () => {
 
   const handleReconcile = async () => {
     // Check if the input matches the regex pattern
-    if (isValidInput) {
+    if (!isValidInput) {
       setMsg('Please enter a number between 0 and 5.')
       return
     }
@@ -57,6 +57,7 @@ const SetDelayDays = () => {
       console.log('-----multipleArrays-------', allArrays)
       const accountToReconcileData = accounToReconcile.jsonData
 
+      console.log('>>>>>>>>accounToReconcile<<<<<<<<<', accounToReconcile)
       console.log('-----accountToReconcileData-------', accountToReconcileData)
       result = reconcile(accountToReconcileData, allArrays, delayDays)
 
@@ -66,31 +67,49 @@ const SetDelayDays = () => {
         currentDate.getMonth() + 1
       }/${currentDate.getFullYear()}`
 
-      const reconciledObj = result.matched?.map((obj) => obj.singleEntry)
+      // Function to convert a string representing a number with commas to a numerical value
+      function parseNumberWithCommas(numberString) {
+        return parseFloat(numberString.replace(/,/g, ''))
+      }
 
-      const reconcileAmount = calculateTotalDebitAmount(reconciledObj)
-      console.log('reconcileAmount', reconcileAmount)
+      // Calculate the total sum of debitamount in singleEntry objects
+      let reconcileAmount = 0
+      result.matched.forEach((entry) => {
+        const debitAmount = entry.singleEntry.debitamount
+        if (debitAmount !== undefined) {
+          reconcileAmount += parseNumberWithCommas(debitAmount)
+        }
+      })
+
+      // Calculate the total sum of debitamount in singleEntry objects
+      // let reconcileAmount = 0
+      // result.matched.forEach((entry) => {
+      //   reconcileAmount += parseNumberWithCommas(entry.singleEntry.debitamount)
+      // })
+
+      console.log('reconciled amount', reconcileAmount)
 
       const unknownAmount = result.misMatched?.reduce((accumulator, obj) => {
-        const amountAsNumber = parseFloat(obj.debitamount)
-        if (!isNaN(amountAsNumber)) {
-          return accumulator + amountAsNumber
+        const amountAsNumber = obj.debitamount?.replace(/,/g, '')
+        if (amountAsNumber !== undefined) {
+          return accumulator + parseFloat(amountAsNumber)
+        } else {
+          return accumulator
         }
-        return accumulator
       }, 0)
 
       console.log('unknownAmount', unknownAmount)
-      function calculateTotalDebitAmount(objArray) {
-        let totalDebitAmount = 0
+      // function calculateTotalDebitAmount(objArray) {
+      //   let totalDebitAmount = 0
 
-        for (const obj of objArray) {
-          const debitAmountString = obj.debitamount
-          const debitAmountNumber = Number(debitAmountString)
-          totalDebitAmount += debitAmountNumber
-        }
+      //   for (const obj of objArray) {
+      //     const debitAmountString = obj.debitamount
+      //     const debitAmountNumber = Number(debitAmountString)
+      //     totalDebitAmount += debitAmountNumber
+      //   }
 
-        return totalDebitAmount
-      }
+      //   return totalDebitAmount
+      // }
 
       let newReconciledAccounts = {
         id: accounToReconcile._id,
@@ -116,7 +135,7 @@ const SetDelayDays = () => {
       console.log('matched', result.matched) // Output: An array of matched objects
       console.log('misMatched', result.misMatched) // Output: An array of mismatched objects
 
-      await newRequest.put(`/accounts?accountId=${checkedAccountId}`)
+      // await newRequest.put(`/accounts?accountId=${checkedAccountId}`)
     } catch (error) {
       setIsPending(false)
       console.log('Reconcile Error', error)
@@ -124,7 +143,6 @@ const SetDelayDays = () => {
       setIsPending(false)
       if (result) {
         navigate('/reports')
-        setAccountsToMapTo([])
       }
     }
   }
@@ -148,7 +166,7 @@ const SetDelayDays = () => {
           RECONCILE
         </button>
       </div>
-      {isValidInput && <h6 className='error-msg'>{msg}</h6>}
+      {!isValidInput && <h6 className='error-msg'>{msg}</h6>}
     </div>
   )
 }

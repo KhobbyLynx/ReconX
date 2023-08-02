@@ -23,6 +23,8 @@ function reconcile(singleAccount, multipleAccounts, delayDays = 0) {
     }
     return false
   })
+  console.log('-----SINGLE ACCOUNT -----', singleAccount)
+  console.log('----multi ACCOUNT-----', multipleAccounts)
 
   console.log('SINGLE ACCOUNT LENGTH', singleAccount?.length)
   console.log('MULTI ACC LENGTH', multipleAccounts?.length)

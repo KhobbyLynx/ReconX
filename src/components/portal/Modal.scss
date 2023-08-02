@@ -10,18 +10,25 @@
     min-width: 360px;
 
     display: flex;
+    align-items: center;
     justify-content: center;
     flex-direction: column;
+
+    &__icon {
+        color: var(--midnight-navy);
+        padding-bottom: 20px;
+    }
 
     .nav-link-icon {
         font-size: 23px;
         cursor: pointer;
-        color: var(--red-500);
+        color: var(--red-600);
     }
 
     p {
-        font-size: 18px;
-        color: var(--red-300);
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--green-600);
     }
 
     h3 {

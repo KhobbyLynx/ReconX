@@ -56,6 +56,7 @@ const BankAccounts = () => {
   }
 
   const handleDelete = async () => {
+    setIsPending(true)
     try {
       await newRequest.delete('/accounts', {
         data: { accountIds: selectedAccounts },
@@ -70,7 +71,9 @@ const BankAccounts = () => {
       // Clear the selectedAccounts state after deletion
       setSelectedAccounts([])
       setSelectAll(false)
+      setIsPending(false)
     } catch (error) {
+      setIsPending(false)
       console.log('Error deleting account(s):', error)
     }
   }

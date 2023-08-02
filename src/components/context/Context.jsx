@@ -13,7 +13,7 @@ const Context = ({ children }) => {
   const [misMatched, setMisMatched] = useState([])
   const [reconciledAccountsState, setReconciledAccountsState] = useState([])
   const [open, setOpen] = useState({
-    successModal: false,
+    successModal: true,
     errorModal: false,
     delayDays: false,
   })

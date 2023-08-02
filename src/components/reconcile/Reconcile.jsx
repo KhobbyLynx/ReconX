@@ -13,6 +13,14 @@ const Reconcile = () => {
     checkedAccountId,
     setCheckedAccountId,
   } = useGlobalContext()
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null)
+
+  // Handle the click event on a table row
+  const handleRowClick = (index) => {
+    setSelectedRowIndex(index)
+    const accountId = fileteredArray[index]._id
+    setCheckedAccountId(accountId)
+  }
 
   const getAccounts = async () => {
     setIsPending(true)
@@ -63,7 +71,11 @@ const Reconcile = () => {
           {accounts.length !== 0 ? (
             <tbody>
               {fileteredArray.map((account, i) => (
-                <tr key={i}>
+                <tr
+                  key={i}
+                  className={i === selectedRowIndex ? 'selected-row' : ''}
+                  onClick={() => handleRowClick(i)}
+                >
                   <td className='th'>{i + 1}</td>
                   <td>{account.name}</td>
                   <td>{account.number}</td>

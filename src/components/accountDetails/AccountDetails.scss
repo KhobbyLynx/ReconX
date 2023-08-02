@@ -6,11 +6,22 @@
         color: var(--gray-200);
         text-align: center;
     }
-    table {
+
+    .table-container {
+        overflow-x: initial;
         display: flex;
+        justify-content: center;
+    }
+
+    .mini {
+        margin: auto;
+    }
+    table {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         padding-top: 0px;
+        width: auto;
         td,
         th {
             min-width: 300px;
@@ -18,6 +29,10 @@
             @media screen and (max-width: "877px") {
                 min-width: 160px;
             }
+        }
+        tbody tr:hover {
+            background-color: initial;
+            color: #ffffff;
         }
     }
 }
