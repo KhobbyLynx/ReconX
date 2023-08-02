@@ -93,7 +93,7 @@ const Reconcile = () => {
         <button className='btn-mv btn btn-pad' onClick={handleBack}>
           BACK
         </button>
-        {accounts.length !== 0 ? (
+        {checkedAccountId ? (
           <button
             className='btn-wh btn btn-pad'
             onClick={() => handleClick(checkedAccountId)}

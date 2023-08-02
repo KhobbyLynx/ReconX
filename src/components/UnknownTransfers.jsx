@@ -11,7 +11,9 @@ const UnknownTransfers = () => {
   const unknownTransfersArray = reconciledAccountsState.flatMap(
     (item) => item.misMatched
   )
+
   console.log('>>>>RECONX ACCOUNT STATE<<<<<', reconciledAccountsState)
+
   const navigate = useNavigate()
   const handleGoBack = () => {
     navigate(-1)
@@ -35,7 +37,7 @@ const UnknownTransfers = () => {
     if (startIndex < unknownTransfersArray.length) {
       setPaginatedData(unknownTransfersArray.slice(startIndex, endIndex))
     }
-  }, [unknownTransfersArray, currentPage])
+  }, [reconciledAccountsState, currentPage])
 
   const maxPaginationButtons = 5
 

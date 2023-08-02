@@ -80,15 +80,15 @@
 .error-msg {
     font-size: 13px;
     font-weight: 600;
-    color: var(--span);
+    color: var(--red-300);
 }
 
-// .table-container {
-//     overflow-x: scroll;
-//     @media screen and (min-width: "999px") {
-//         overflow-x: initial;
-//     }
-// }
+.table-container {
+    overflow-x: scroll;
+    @media screen and (min-width: "999px") {
+        overflow-x: initial;
+    }
+}
 
 .btns {
     display: flex;

@@ -6,20 +6,25 @@ import { reconcile } from '../utils/reconcile'
 
 const SetDelayDays = () => {
   const {
+    checkedAccountId,
     accountsToMapTo,
     accountsToMapToId,
     setAccountsToMapTo,
     accounToReconcile,
-    setMisMatched,
-    setMatched,
     setIsPending,
     reconciledAccountsState,
     setReconciledAccountsState,
   } = useGlobalContext()
   const [delayDays, SetDelayDays] = useState(0)
+  const [isValidInput, setIsValidInput] = useState(true)
+  const [msg, setMsg] = useState('')
 
   const handleDaysChange = (event) => {
     const { value } = event.target
+
+    // Ensure the value is a valid number between 0 and 5
+    const parsedValue = parseInt(value)
+    setIsValidInput(!isNaN(parsedValue) && parsedValue >= 0 && parsedValue <= 5)
     SetDelayDays(value)
   }
 
@@ -29,6 +34,11 @@ const SetDelayDays = () => {
   const navigate = useNavigate()
 
   const handleReconcile = async () => {
+    // Check if the input matches the regex pattern
+    if (isValidInput) {
+      setMsg('Please enter a number between 0 and 5.')
+      return
+    }
     setIsPending(true)
     let result
     try {
@@ -101,9 +111,12 @@ const SetDelayDays = () => {
       ])
 
       console.log('=========reconciledAccounts========', newReconciledAccounts)
+      console.log('=========checkedAccountId========', checkedAccountId)
 
       console.log('matched', result.matched) // Output: An array of matched objects
       console.log('misMatched', result.misMatched) // Output: An array of mismatched objects
+
+      await newRequest.put(`/accounts?accountId=${checkedAccountId}`)
     } catch (error) {
       setIsPending(false)
       console.log('Reconcile Error', error)
@@ -125,6 +138,7 @@ const SetDelayDays = () => {
   return (
     <div className='modal'>
       <h3>Enter Delay Days</h3>
+
       <input type='number' value={delayDays} onChange={handleDaysChange} />
       <div className='btns'>
         <button className='btn-mv btn btn-pad' onClick={handleGoBack}>
@@ -134,6 +148,7 @@ const SetDelayDays = () => {
           RECONCILE
         </button>
       </div>
+      {isValidInput && <h6 className='error-msg'>{msg}</h6>}
     </div>
   )
 }

@@ -19,9 +19,9 @@ const ReconcileAgainst = () => {
     reconciledAccountsState,
   } = useGlobalContext()
   const [selectAll, setSelectAll] = useState(false)
+  const [msg, setMsg] = useState('')
   const { id } = useParams()
 
-  const reconciledAccountsStateId = reconciledAccountsState.map((obj) => obj.id)
   const filteredArray = accounts.filter((account) => account._id !== id)
   const newArray = filteredArray.filter(
     (account) => account.reconciled !== true
@@ -77,6 +77,10 @@ const ReconcileAgainst = () => {
 
   const navigate = useNavigate()
   const handleNextClick = () => {
+    if (accountsToMapToId < 1) {
+      setMsg('Select at least one account')
+      return
+    }
     navigate('/delay')
   }
 
@@ -135,6 +139,7 @@ const ReconcileAgainst = () => {
             NEXT
           </button>
         </div>
+        {msg && <h6 className='error-msg'>{msg}</h6>}
       </div>
     </div>
   )
